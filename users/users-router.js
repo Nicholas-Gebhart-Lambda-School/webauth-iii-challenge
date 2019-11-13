@@ -1,7 +1,14 @@
 const router = require("express").Router();
 
-router.get("/", (req, res) => {
-  res.send("<h3>Users Router</h3>");
+const Users = require("./users-model");
+const middleware = require("../auth/auth-middleware");
+
+router.get("/", middleware, (req, res) => {
+  Users.find()
+    .then(users => {
+      res.status(200).json(users);
+    })
+    .catch(() => res.status(500).json({ message: "server error" }));
 });
 
 module.exports = router;
